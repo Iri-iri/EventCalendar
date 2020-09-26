@@ -1,0 +1,85 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Merriweather', serif;
+}
+
+.container {
+  width: 100%;
+  height: 100vh;
+}
+
+#form {
+  width: 90%;
+  margin: 2rem auto;
+}
+
+form input {
+  height: 1.5rem;
+  margin-right: 1.5rem;
+}
+
+.calendar {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.month {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  padding: 10px 0;
+}
+
+#date {
+  font-size: 1.2rem;
+}
+
+.weekdays {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background-color: rgb(187, 186, 186);
+}
+
+.weekdays div {
+  width: calc(100% / 7);
+  text-align: center;
+  padding: 10px;
+  color: rgba(37, 35, 35, 0.8);
+  font-size: 0.9rem;
+}
+
+.days {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.days div {
+  width: calc(100% / 7);
+  height: 6rem;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+  text-shadow: 0 0.3rem 0.5rem rgba(8, 69, 182, 0.5);
+  border: 1px solid black;
+  background-color: rgb(74, 228, 220);
+  transition: background-color 0.5s;
+}
+
+.prev,
+.next {
+  opacity: 0.4;
+}
+
+#prev,
+#next {
+  background-color: rgb(187, 186, 186);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
