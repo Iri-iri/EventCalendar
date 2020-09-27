@@ -1,21 +1,30 @@
-const date = new Date();
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+function init() {
+  const dateTitle = new Date();
+  const monthsTitle = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  titleOfCalendar(dateTitle, monthsTitle);
+  setWeeksGrid(dateTitle);
+  prevTitleOfCalendar(dateTitle, monthsTitle);
+  nextTitleOfCalendar(dateTitle, monthsTitle);
+}
 
 function data(year, month) {
   const nowDay = new Date().getDate();
+  const nowMonth = new Date().getMonth();
+  const nowYear = new Date().getFullYear();
   const startDate = new Date(year, month, 1); /* first day of month */
   const endDate = new Date(year, month + 1, 0); /* last day of month */
   const dayOfStartDay = startDate.getDay(); /* day number of week */
@@ -57,8 +66,8 @@ function data(year, month) {
 
     if (
       date.getDate() === nowDay &&
-      date.getMonth() === month &&
-      date.getFullYear() === year
+      date.getMonth() === nowMonth &&
+      date.getFullYear() === nowYear
     ) {
       dates.push({
         day: date.getDate(),
@@ -77,14 +86,14 @@ function data(year, month) {
   return weeks;
 }
 
-function setWeeksGrid(currentDate) {
+function setWeeksGrid(date) {
   currentDate = date.setMonth(date.getMonth());
   const month = date.getMonth();
   const year = date.getFullYear();
   const day = date.getDay();
   const weeks = data(year, month, day);
   displayCalendar(weeks);
-  console.log("weeks", weeks);
+  // console.log("weeks", weeks);
 }
 
 function displayCalendar(currentWeek) {
@@ -92,28 +101,34 @@ function displayCalendar(currentWeek) {
   days.innerHTML = "";
   currentWeek.forEach(function (item) {
     for (let i = 0; i < 7; i++) {
-      days.innerHTML += `<div>${item[i].day}</div>`;
+      if (item[i].today === "today") {
+        days.innerHTML += `<div style ="color: red">${item[i].day}</div>`;
+      } else {
+        days.innerHTML += `<div>${item[i].day}</div>`;
+      }
     }
   });
 }
 
-setWeeksGrid();
-
-function titleOfCalendar() {
+function titleOfCalendar(date, month) {
   let newDate = document.querySelector("#date");
-  newDate.innerHTML = `${months[date.getMonth()]} ${date.getFullYear()}`;
+  newDate.innerHTML = `${month[date.getMonth()]} ${date.getFullYear()}`;
 }
 
-titleOfCalendar();
+function prevTitleOfCalendar(date, month) {
+  document.querySelector("#prev").addEventListener("click", () => {
+    let prevDate = date.setMonth(date.getMonth() - 1);
+    titleOfCalendar(date, month);
+    setWeeksGrid(date, prevDate);
+  });
+}
 
-document.querySelector("#prev").addEventListener("click", () => {
-  let prevDate = date.setMonth(date.getMonth() - 1);
-  titleOfCalendar();
-  setWeeksGrid(prevDate);
-});
+function nextTitleOfCalendar(date, month) {
+  document.querySelector("#next").addEventListener("click", () => {
+    let nextDate = date.setMonth(date.getMonth() + 1);
+    titleOfCalendar(date, month);
+    setWeeksGrid(date, nextDate);
+  });
+}
 
-document.querySelector("#next").addEventListener("click", () => {
-  let nextDate = date.setMonth(date.getMonth() + 1);
-  titleOfCalendar();
-  setWeeksGrid(nextDate);
-});
+init();
