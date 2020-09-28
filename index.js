@@ -1,4 +1,4 @@
-function init() {
+const init = () => {
   const dateTitle = new Date();
   const monthsTitle = [
     "January",
@@ -21,7 +21,7 @@ function init() {
   nextTitleOfCalendar(dateTitle, monthsTitle);
 }
 
-function data(year, month) {
+const data = (year, month) => {
   const nowDay = new Date().getDate();
   const nowMonth = new Date().getMonth();
   const nowYear = new Date().getFullYear();
@@ -86,7 +86,7 @@ function data(year, month) {
   return weeks;
 }
 
-function setWeeksGrid(date) {
+const setWeeksGrid = (date) => {
   currentDate = date.setMonth(date.getMonth());
   const month = date.getMonth();
   const year = date.getFullYear();
@@ -96,7 +96,7 @@ function setWeeksGrid(date) {
   // console.log("weeks", weeks);
 }
 
-function displayCalendar(currentWeek) {
+const displayCalendar = (currentWeek) => {
   const days = document.querySelector(".days");
   days.innerHTML = "";
   currentWeek.forEach(function (item) {
@@ -110,12 +110,12 @@ function displayCalendar(currentWeek) {
   });
 }
 
-function titleOfCalendar(date, month) {
+const titleOfCalendar = (date, month) => {
   let newDate = document.querySelector("#date");
   newDate.innerHTML = `${month[date.getMonth()]} ${date.getFullYear()}`;
 }
 
-function prevTitleOfCalendar(date, month) {
+const prevTitleOfCalendar = (date, month) => {
   document.querySelector("#prev").addEventListener("click", () => {
     let prevDate = date.setMonth(date.getMonth() - 1);
     titleOfCalendar(date, month);
@@ -123,7 +123,7 @@ function prevTitleOfCalendar(date, month) {
   });
 }
 
-function nextTitleOfCalendar(date, month) {
+const nextTitleOfCalendar = (date, month) => {
   document.querySelector("#next").addEventListener("click", () => {
     let nextDate = date.setMonth(date.getMonth() + 1);
     titleOfCalendar(date, month);
