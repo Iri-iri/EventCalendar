@@ -19,7 +19,7 @@ const init = () => {
   setWeeksGrid(dateTitle);
   prevTitleOfCalendar(dateTitle, monthsTitle);
   nextTitleOfCalendar(dateTitle, monthsTitle);
-}
+};
 
 const data = (year, month) => {
   const nowDay = new Date().getDate();
@@ -84,7 +84,7 @@ const data = (year, month) => {
   }
 
   return weeks;
-}
+};
 
 const setWeeksGrid = (date) => {
   currentDate = date.setMonth(date.getMonth());
@@ -93,8 +93,8 @@ const setWeeksGrid = (date) => {
   const day = date.getDay();
   const weeks = data(year, month, day);
   displayCalendar(weeks);
-  // console.log("weeks", weeks);
-}
+  console.log("weeks", weeks);
+};
 
 const displayCalendar = (currentWeek) => {
   const days = document.querySelector(".days");
@@ -108,12 +108,12 @@ const displayCalendar = (currentWeek) => {
       }
     }
   });
-}
+};
 
 const titleOfCalendar = (date, month) => {
   let newDate = document.querySelector("#date");
   newDate.innerHTML = `${month[date.getMonth()]} ${date.getFullYear()}`;
-}
+};
 
 const prevTitleOfCalendar = (date, month) => {
   document.querySelector("#prev").addEventListener("click", () => {
@@ -121,7 +121,7 @@ const prevTitleOfCalendar = (date, month) => {
     titleOfCalendar(date, month);
     setWeeksGrid(date, prevDate);
   });
-}
+};
 
 const nextTitleOfCalendar = (date, month) => {
   document.querySelector("#next").addEventListener("click", () => {
@@ -129,6 +129,88 @@ const nextTitleOfCalendar = (date, month) => {
     titleOfCalendar(date, month);
     setWeeksGrid(date, nextDate);
   });
-}
+};
 
 init();
+
+const dataTimeStamp = () => {
+  const nowMonth = new Date().getMonth();
+  const nowYear = new Date().getFullYear();
+  const startDate = new Date(nowYear, nowMonth, 1); /* first day of month */
+  const endDate = new Date(nowYear, nowMonth + 1, 0); /* last day of month */
+  const dayOfStartDay = startDate.getDay(); /* day number of week */
+  const currentMonthTotalDays = endDate.getDate(); /* amount days in current month */
+  const totalWeeks = Math.ceil(
+    (currentMonthTotalDays + dayOfStartDay) / 7
+  ); /* total weeks in month */
+  const prevMonthEndDate = new Date(
+    nowYear,
+    nowMonth,
+    0
+  ); /* end day of previous month */
+  const dates = [];
+  let prevMonthDay =
+    prevMonthEndDate.getDate() -
+    dayOfStartDay +
+    1; /* get first Sunday of first week */
+  let nextMonthDay = 1;
+
+  let visible = [];
+  let description = document.querySelector("#description");
+  let start = document.querySelector("#start");
+  let finish = document.querySelector("#finish");
+
+  let obj = {
+    description: description.value,
+    start: Date.parse(start.value) - 3 * 60 * 60 * 1000,
+    finish: Date.parse(finish.value) - 3 * 60 * 60 * 1000,
+  };
+  visible.push(obj);
+
+  for (let i = 0; i < totalWeeks * 7; i += 7) {
+    let date;
+    let dateEnd = new Date(nowYear, nowMonth, i - dayOfStartDay + 7);
+
+    if (i < dayOfStartDay) {
+      /* if month does not start on Sunday */
+      date = new Date(nowYear, nowMonth - 1, prevMonthDay);
+      prevMonthDay = prevMonthDay + 1;
+    } else if (i > currentMonthTotalDays + (dayOfStartDay - 1)) {
+      /* if month does not end on Saturday */
+      date = new Date(nowYear, nowMonth + 1, nextMonthDay);
+      nextMonthDay = nextMonthDay + 1;
+    } else {
+      date = new Date(
+        nowYear,
+        nowMonth,
+        i - dayOfStartDay + 1
+      ); /* current month dates */
+    }
+    dates.push({
+      dayStart: date.getDate(),
+      dayStartTS: date.getTime(),
+      dateEnd: dateEnd.getDate(),
+      dayEndTS: dateEnd.getTime(),
+    });
+  }
+
+  const weeksTimeStamp = [];
+  for (let i = 0; i < Math.ceil(dates.length / 7); i++) {
+    weeksTimeStamp[i] = dates.slice(i * 7, i * 7 + 7);
+  }
+
+  weeksTimeStamp.forEach(function (item) {
+    for (let j = 0; j < totalWeeks; j++) {
+      if (obj.start >= item[j].dayStartTS && obj.finish <= item[j].dayEndTS) {
+        item[j].visible = visible;
+      }
+    }
+  });
+
+  console.log("weeksTimeStamp", weeksTimeStamp);
+};
+
+btn.addEventListener("click", function (event) {
+  event.preventDefault();
+  dataTimeStamp();
+});
