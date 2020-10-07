@@ -19,7 +19,7 @@ const init = () => {
   setWeeksGrid(dateTitle);
   prevTitleOfCalendar(dateTitle, monthsTitle);
   nextTitleOfCalendar(dateTitle, monthsTitle);
-};
+}
 
 const data = (year, month) => {
   const nowDay = new Date().getDate();
@@ -74,8 +74,19 @@ const data = (year, month) => {
         dayTS: date.getTime(),
         today: "today",
       });
+    } else if (
+      date.getMonth() === nowMonth &&
+      date.getFullYear() === nowYear) {
+      dates.push({
+        day: date.getDate(),
+        dayTS: date.getTime(),
+        month: "current",
+      });
     } else {
-      dates.push({ day: date.getDate(), dayTS: date.getTime() });
+      dates.push({
+        day: date.getDate(),
+        dayTS: date.getTime(),
+      })
     }
   }
   const weeks = [];
@@ -84,7 +95,8 @@ const data = (year, month) => {
   }
 
   return weeks;
-};
+
+}
 
 const setWeeksGrid = (date) => {
   currentDate = date.setMonth(date.getMonth());
@@ -94,7 +106,7 @@ const setWeeksGrid = (date) => {
   const weeks = data(year, month, day);
   displayCalendar(weeks);
   console.log("weeks", weeks);
-};
+}
 
 const displayCalendar = (currentWeek) => {
   const days = document.querySelector(".days");
@@ -102,18 +114,21 @@ const displayCalendar = (currentWeek) => {
   currentWeek.forEach(function (item) {
     for (let i = 0; i < 7; i++) {
       if (item[i].today === "today") {
-        days.innerHTML += `<div style ="color: red">${item[i].day}</div>`;
-      } else {
+        days.innerHTML += `<div style ="color: #fff; background-color: #27ae60">${item[i].day}</div>`;
+      } else if (item[i].month === "current") {
         days.innerHTML += `<div>${item[i].day}</div>`;
+      } else {
+        days.innerHTML += `<div style ="color: #999">${item[i].day}</div>`;
       }
     }
   });
-};
+}
+
 
 const titleOfCalendar = (date, month) => {
   let newDate = document.querySelector("#date");
   newDate.innerHTML = `${month[date.getMonth()]} ${date.getFullYear()}`;
-};
+}
 
 const prevTitleOfCalendar = (date, month) => {
   document.querySelector("#prev").addEventListener("click", () => {
@@ -121,7 +136,7 @@ const prevTitleOfCalendar = (date, month) => {
     titleOfCalendar(date, month);
     setWeeksGrid(date, prevDate);
   });
-};
+}
 
 const nextTitleOfCalendar = (date, month) => {
   document.querySelector("#next").addEventListener("click", () => {
@@ -129,9 +144,10 @@ const nextTitleOfCalendar = (date, month) => {
     titleOfCalendar(date, month);
     setWeeksGrid(date, nextDate);
   });
-};
+}
 
 init();
+
 
 const dataTimeStamp = () => {
   const nowMonth = new Date().getMonth();
@@ -140,34 +156,33 @@ const dataTimeStamp = () => {
   const endDate = new Date(nowYear, nowMonth + 1, 0); /* last day of month */
   const dayOfStartDay = startDate.getDay(); /* day number of week */
   const currentMonthTotalDays = endDate.getDate(); /* amount days in current month */
-  const totalWeeks = Math.ceil(
-    (currentMonthTotalDays + dayOfStartDay) / 7
-  ); /* total weeks in month */
-  const prevMonthEndDate = new Date(
-    nowYear,
-    nowMonth,
-    0
-  ); /* end day of previous month */
+  const totalWeeks = Math.ceil((currentMonthTotalDays + dayOfStartDay) / 7); /* total weeks in month */
+  const prevMonthEndDate = new Date(nowYear, nowMonth, 0); /* end day of previous month */
   const dates = [];
-  let prevMonthDay =
-    prevMonthEndDate.getDate() -
-    dayOfStartDay +
-    1; /* get first Sunday of first week */
+  let prevMonthDay = prevMonthEndDate.getDate() - dayOfStartDay + 1; /* get first Sunday of first week */
   let nextMonthDay = 1;
+
 
   let visible = [];
   let description = document.querySelector("#description");
   let start = document.querySelector("#start");
   let finish = document.querySelector("#finish");
 
+
   let obj = {
     description: description.value,
-    start: Date.parse(start.value) - 3 * 60 * 60 * 1000,
-    finish: Date.parse(finish.value) - 3 * 60 * 60 * 1000,
-  };
-  visible.push(obj);
+    start: Date.parse(start.value) - (3 * 60 * 60 * 1000),
+    finish: Date.parse(finish.value) - (3 * 60 * 60 * 1000),
+  }
+
+  function visiblePush() {
+    visible.push(obj);
+    console.log(visible)
+  }
+
 
   for (let i = 0; i < totalWeeks * 7; i += 7) {
+
     let date;
     let dateEnd = new Date(nowYear, nowMonth, i - dayOfStartDay + 7);
 
@@ -180,11 +195,7 @@ const dataTimeStamp = () => {
       date = new Date(nowYear, nowMonth + 1, nextMonthDay);
       nextMonthDay = nextMonthDay + 1;
     } else {
-      date = new Date(
-        nowYear,
-        nowMonth,
-        i - dayOfStartDay + 1
-      ); /* current month dates */
+      date = new Date(nowYear, nowMonth, i - dayOfStartDay + 1); /* current month dates */
     }
     dates.push({
       dayStart: date.getDate(),
@@ -192,6 +203,7 @@ const dataTimeStamp = () => {
       dateEnd: dateEnd.getDate(),
       dayEndTS: dateEnd.getTime(),
     });
+
   }
 
   const weeksTimeStamp = [];
@@ -200,17 +212,36 @@ const dataTimeStamp = () => {
   }
 
   weeksTimeStamp.forEach(function (item) {
+
+    let widthEvent = (obj.finish - obj.start) + (24 * 60 * 60 * 1000);
+    let widthWeek = 7 * 24 * 60 * 60 * 1000;
+    console.log(widthWeek);
+    console.log(widthEvent);
     for (let j = 0; j < totalWeeks; j++) {
-      if (obj.start >= item[j].dayStartTS && obj.finish <= item[j].dayEndTS) {
+      if ((obj.start >= item[j].dayStartTS) && (obj.finish <= item[j].dayEndTS)) {
         item[j].visible = visible;
+        visiblePush();
+        let top = 35;
+        // visible.forEach(function(it, k){
+        //   if (visible[k - 1] && visible[k - 1].finish >= it.finish) {
+        //     top += 30;
+        //   };
+        //   if (top <= 120) {
+
+        wrapper.innerHTML += `<div class="slide" style="left: ${(obj.start - item[j].dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${(j * 120) + top}px"></div>`
+        const slide = document.querySelector(".slide");
+        slide.textContent = obj.description;
       }
     }
-  });
+  })
 
   console.log("weeksTimeStamp", weeksTimeStamp);
-};
+
+}
+
+const wrapper = document.querySelector(".wrapper");
 
 btn.addEventListener("click", function (event) {
   event.preventDefault();
   dataTimeStamp();
-});
+})

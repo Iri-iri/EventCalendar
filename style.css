@@ -2,7 +2,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Merriweather', serif;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+body {
+  background-color: #dfe6e9;
 }
 
 .container {
@@ -11,8 +15,9 @@
 }
 
 #form {
-  width: 90%;
-  margin: 2rem auto;
+  width: 80%;
+  margin: 0 auto;
+  padding: 2rem 0;
 }
 
 form input {
@@ -21,65 +26,94 @@ form input {
 }
 
 .calendar {
-  width: 90%;
+  width: 80%;
   margin: 0 auto;
+  box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.5);
+  background-color: #fff;
 }
 
 .month {
   display: flex;
   justify-content: space-between;
   text-align: center;
-  padding: 10px 0;
+  align-items: center;
+  padding: 40px 30px;
+  width: 100%;
+  background-color: #2ecc71;
+  color: #ffff;
 }
 
 #date {
-  font-size: 1.2rem;
+  font-size: 1.8rem;
+  font-weight: 500;
 }
 
 .weekdays {
   width: 100%;
   display: flex;
   justify-content: space-around;
-  background-color: rgb(187, 186, 186);
+  padding: 10px 0;
+  background-color: #27ae60;
+  color: #ffff;
 }
 
-.weekdays div {
-  width: calc(100% / 7);
-  text-align: center;
-  padding: 10px;
-  color: rgba(37, 35, 35, 0.8);
-  font-size: 0.9rem;
-}
 
 .days {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
+  font-weight: 300;
 }
 
 .days div {
-  width: calc(100% / 7);
-  height: 6rem;
+  height: 120px;
   padding: 0.5rem;
   display: flex;
   justify-content: flex-end;
-  text-shadow: 0 0.3rem 0.5rem rgba(8, 69, 182, 0.5);
-  border: 1px solid black;
-  background-color: rgb(74, 228, 220);
-  transition: background-color 0.5s;
+  align-content: flex-start;
+  text-shadow: 0 0.3rem 0.5rem rgba(112, 112, 112, 0.8);
+  border: 0.1px solid rgb(202, 202, 202);
+  transition: all 0.4s;
+  color: rgb(58, 58, 58)
 }
 
-.prev,
-.next {
-  opacity: 0.4;
+.weekdays div,
+.days div {
+  width: calc(100% / 7);
+  text-align: center;
+}
+
+.days div:hover {
+  background-color: #dfe6e9;
+  cursor: pointer;
 }
 
 #prev,
 #next {
-  background-color: rgb(187, 186, 186);
-  width: 30px;
-  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   font-size: 1.5rem;
+  transition: all 0.4s;
+}
+
+#prev:hover,
+#next:hover {
+  background-color: rgba(0, 0, 0, 0.2);
   cursor: pointer;
+}
+
+.wrapper {
+  position: relative;
+}
+
+.slide {
+  border: 2px solid #2ecc71;
+  background-color: rgba(0, 0, 0, 0.1);
+  height: 25px;
+  position: absolute;
 }
