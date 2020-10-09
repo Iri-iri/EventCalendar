@@ -89,40 +89,71 @@ const data = (year, month) => {
       })
     }
   }
+
+  // weekOne.innerHTML = "";
+  // const weeks = [];
+  // for (let i = 0; i < Math.ceil(dates.length / 7); i++) {
+  //   weeks[i] = dates.slice(i * 7, i * 7 + 7);
+    // weekOne.innerHTML += `<div class="week">${weeks[i]}</div>`
+  // }
   const weeks = [];
   for (let i = 0; i < Math.ceil(dates.length / 7); i++) {
     weeks[i] = dates.slice(i * 7, i * 7 + 7);
   }
-
-  return weeks;
-
-}
-
-const setWeeksGrid = (date) => {
-  currentDate = date.setMonth(date.getMonth());
-  const month = date.getMonth();
-  const year = date.getFullYear();
-  const day = date.getDay();
-  const weeks = data(year, month, day);
-  displayCalendar(weeks);
-  console.log("weeks", weeks);
-}
-
+  
+  console.log(weeks)
+    
+    return weeks;
+    
+  }
+  
+  const setWeeksGrid = (date) => {
+    currentDate = date.setMonth(date.getMonth());
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    const day = date.getDay();
+    const weeks = data(year, month, day);
+    displayCalendar(weeks);
+    console.log("weeks", weeks);
+  }
+  
 const displayCalendar = (currentWeek) => {
-  const days = document.querySelector(".days");
-  days.innerHTML = "";
-  currentWeek.forEach(function (item) {
-    for (let i = 0; i < 7; i++) {
-      if (item[i].today === "today") {
-        days.innerHTML += `<div style ="color: #fff; background-color: #27ae60">${item[i].day}</div>`;
-      } else if (item[i].month === "current") {
-        days.innerHTML += `<div>${item[i].day}</div>`;
-      } else {
-        days.innerHTML += `<div style ="color: #999">${item[i].day}</div>`;
-      }
-    }
+    
+    const weekAll = document.querySelector(".weekAll");
+    weekAll.innerHTML = "";
+
+    currentWeek.forEach(function (item) {
+     
+      weekAll.innerHTML += `<div class="week"></div>`
+      
+      const week = document.querySelector(".week");
+      week.innerHTML = "";
+      
+      item.forEach(function (it) {
+        week.innerHTML += `<div>${it.day}</div>`;
+      })
+      console.log(week)
+
+      // debugger
   });
 }
+
+// const displayCalendar = (currentWeek) => {
+//   const days = document.querySelector(".days");
+//   days.innerHTML = "";
+//   currentWeek.forEach(function (item) {
+//     for (let i = 0; i < 7; i++) {
+//       if (item[i].today === "today") {
+//         days.innerHTML += `<div style ="color: #fff; background-color: #27ae60">${item[i].day}</div>`;
+//       } else if (item[i].month === "current") {
+//         days.innerHTML += `<div>${item[i].day}</div>`;
+//       } else {
+//         days.innerHTML += `<div style ="color: #999">${item[i].day}</div>`;
+//       }
+//     }
+//   });
+// }
+
 
 
 const titleOfCalendar = (date, month) => {

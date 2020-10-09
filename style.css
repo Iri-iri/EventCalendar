@@ -58,14 +58,14 @@ form input {
 }
 
 
-.days {
+.week {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   font-weight: 300;
 }
 
-.days div {
+.week div {
   height: 120px;
   padding: 0.5rem;
   display: flex;
@@ -78,12 +78,12 @@ form input {
 }
 
 .weekdays div,
-.days div {
+.week div {
   width: calc(100% / 7);
   text-align: center;
 }
 
-.days div:hover {
+.week div:hover {
   background-color: #dfe6e9;
   cursor: pointer;
 }
