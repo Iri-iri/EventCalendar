@@ -42,7 +42,6 @@ const data = (year, month) => {
     prevMonthEndDate.getDate() -
     dayOfStartDay +
     1; /* get first Sunday of first week */
-  console.log(prevMonthDay);
   let nextMonthDay = 1;
 
   for (let i = 0; i < totalWeeks * 7; i += 1) {
@@ -89,41 +88,49 @@ const data = (year, month) => {
       })
     }
   }
+
   const weeks = [];
   for (let i = 0; i < Math.ceil(dates.length / 7); i++) {
     weeks[i] = dates.slice(i * 7, i * 7 + 7);
   }
-
-  return weeks;
-
-}
-
-const setWeeksGrid = (date) => {
-  currentDate = date.setMonth(date.getMonth());
-  const month = date.getMonth();
-  const year = date.getFullYear();
-  const day = date.getDay();
-  const weeks = data(year, month, day);
-  displayCalendar(weeks);
-  console.log("weeks", weeks);
-}
+  
+  // console.log(weeks)
+    return weeks;
+    
+  }
+  
+  const setWeeksGrid = (date) => {
+    currentDate = date.setMonth(date.getMonth());
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    const day = date.getDay();
+    const weeks = data(year, month, day);
+    displayCalendar(weeks);
+    console.log("weeks", weeks);
+  }
+  
 
 const displayCalendar = (currentWeek) => {
-  const days = document.querySelector(".days");
-  days.innerHTML = "";
-  currentWeek.forEach(function (item) {
-    for (let i = 0; i < 7; i++) {
-      if (item[i].today === "today") {
-        days.innerHTML += `<div style ="color: #fff; background-color: #27ae60">${item[i].day}</div>`;
-      } else if (item[i].month === "current") {
-        days.innerHTML += `<div>${item[i].day}</div>`;
-      } else {
-        days.innerHTML += `<div style ="color: #999">${item[i].day}</div>`;
-      }
-    }
+  const weekAll = document.querySelector(".weekAll");
+  weekAll.innerHTML = "";
+  
+  currentWeek.forEach((item, index) => {
+  weekAll.innerHTML += `<div class="week"></div>`;
+  
+  const weeks = [...document.querySelectorAll(".week")];
+  weeks[index].innerHTML = "";
+  
+    item.forEach((it) => {
+        if (it.today === "today") {
+          weeks[index].innerHTML += `<div style ="color: #fff; background-color: #27ae60">${it.day}</div>`;
+        } else if (it.month === "current") {
+          weeks[index].innerHTML += `<div>${it.day}</div>`;
+        } else {
+          weeks[index].innerHTML += `<div style ="color: #999">${it.day}</div>`;
+        }
   });
-}
-
+  });
+  };
 
 const titleOfCalendar = (date, month) => {
   let newDate = document.querySelector("#date");
@@ -148,6 +155,7 @@ const nextTitleOfCalendar = (date, month) => {
 
 init();
 
+let visible = [];
 
 const dataTimeStamp = () => {
   const nowMonth = new Date().getMonth();
@@ -163,7 +171,6 @@ const dataTimeStamp = () => {
   let nextMonthDay = 1;
 
 
-  let visible = [];
   let description = document.querySelector("#description");
   let start = document.querySelector("#start");
   let finish = document.querySelector("#finish");
@@ -174,11 +181,8 @@ const dataTimeStamp = () => {
     start: Date.parse(start.value) - (3 * 60 * 60 * 1000),
     finish: Date.parse(finish.value) - (3 * 60 * 60 * 1000),
   }
-
-  function visiblePush() {
     visible.push(obj);
-    console.log(visible)
-  }
+
 
 
   for (let i = 0; i < totalWeeks * 7; i += 7) {
@@ -211,26 +215,31 @@ const dataTimeStamp = () => {
     weeksTimeStamp[i] = dates.slice(i * 7, i * 7 + 7);
   }
 
-  weeksTimeStamp.forEach(function (item) {
-
-    let widthEvent = (obj.finish - obj.start) + (24 * 60 * 60 * 1000);
+  weeksTimeStamp.forEach((item) => {
+    // debugger
     let widthWeek = 7 * 24 * 60 * 60 * 1000;
-    console.log(widthWeek);
-    console.log(widthEvent);
+    let widthEvent = (obj.finish - obj.start) + (24 * 60 * 60 * 1000);
+    const weeks = [...document.querySelectorAll(".week")];
     for (let j = 0; j < totalWeeks; j++) {
       if ((obj.start >= item[j].dayStartTS) && (obj.finish <= item[j].dayEndTS)) {
         item[j].visible = visible;
-        visiblePush();
         let top = 35;
-        // visible.forEach(function(it, k){
-        //   if (visible[k - 1] && visible[k - 1].finish >= it.finish) {
+        console.log(visible);
+        console.log(weeks);
+        // visible.forEach(function (it, k) {
+        //   if (visible[k - 1] && visible[k - 1].finish <= it.start) { 
         //     top += 30;
-        //   };
+        //   }
+        //   console.log(top)
+        //   debugger
         //   if (top <= 120) {
-
-        wrapper.innerHTML += `<div class="slide" style="left: ${(obj.start - item[j].dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${(j * 120) + top}px"></div>`
-        const slide = document.querySelector(".slide");
-        slide.textContent = obj.description;
+            weeks[j].innerHTML += `<div class="slide" style="left: ${(obj.start - item[j].dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${top}px;"></div>`
+            console.log(top)
+            // debugger
+            // const slide = document.querySelector(".slide");
+            // slide.textContent = obj.description;
+        //   }
+        // })
       }
     }
   })
@@ -238,8 +247,6 @@ const dataTimeStamp = () => {
   console.log("weeksTimeStamp", weeksTimeStamp);
 
 }
-
-const wrapper = document.querySelector(".wrapper");
 
 btn.addEventListener("click", function (event) {
   event.preventDefault();
