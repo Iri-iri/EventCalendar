@@ -155,7 +155,8 @@ const nextTitleOfCalendar = (date, month) => {
 
 init();
 
-let visible = [];
+// let visible = [];
+let events = [];
 
 const dataTimeStamp = () => {
   const nowMonth = new Date().getMonth();
@@ -181,8 +182,8 @@ const dataTimeStamp = () => {
     start: Date.parse(start.value) - (3 * 60 * 60 * 1000),
     finish: Date.parse(finish.value) - (3 * 60 * 60 * 1000),
   }
-    visible.push(obj);
-
+    events.push(obj);
+    console.log("events", events);
 
 
   for (let i = 0; i < totalWeeks * 7; i += 7) {
@@ -206,43 +207,132 @@ const dataTimeStamp = () => {
       dayStartTS: date.getTime(),
       dateEnd: dateEnd.getDate(),
       dayEndTS: dateEnd.getTime(),
+      a: "100",
+      b: "100",
+      c: "100",
+      visible: [],
     });
 
   }
 
-  const weeksTimeStamp = [];
-  for (let i = 0; i < Math.ceil(dates.length / 7); i++) {
-    weeksTimeStamp[i] = dates.slice(i * 7, i * 7 + 7);
-  }
+  weeksTimeStamp = dates;
+  
+  weeksTimeStamp.forEach((item, j) => {
 
-  weeksTimeStamp.forEach((item) => {
-    // debugger
-    let widthWeek = 7 * 24 * 60 * 60 * 1000;
-    let widthEvent = (obj.finish - obj.start) + (24 * 60 * 60 * 1000);
     const weeks = [...document.querySelectorAll(".week")];
-    for (let j = 0; j < totalWeeks; j++) {
-      if ((obj.start >= item[j].dayStartTS) && (obj.finish <= item[j].dayEndTS)) {
-        item[j].visible = visible;
+    debugger
+    events.forEach((elem) => {
+      // weeks.innerHTML = "";
+      if ((elem.start >= item.dayStartTS) && (elem.finish <= item.dayEndTS)) {
+        item.visible.push(elem);
+      } else if ((elem.start >= item.dayStartTS) && (elem.start <= item.dayEndTS)) {
+        item.visible.push(elem);
+      } else if ((elem.finish >= item.dayStartTS) && (elem.finish <= item.dayEndTS)) {
+        item.visible.push(elem);
+      } else if ((elem.start < item.dayStartTS) && (elem.start > item.dayEndTS)) {
+        item.visible.push(elem);
+      } else if ((elem.start <= item.dayStartTS) && (elem.finish >= item.dayEndTS)) {
+        item.visible.push(elem);
+      };
+    });
+
+    if (item.visible.length > 0) {
+      item.visible.forEach((el)=>{
+        // debugger
         let top = 35;
-        console.log(visible);
-        console.log(weeks);
-        // visible.forEach(function (it, k) {
-        //   if (visible[k - 1] && visible[k - 1].finish <= it.start) { 
-        //     top += 30;
-        //   }
-        //   console.log(top)
-        //   debugger
-        //   if (top <= 120) {
-            weeks[j].innerHTML += `<div class="slide" style="left: ${(obj.start - item[j].dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${top}px;"></div>`
-            console.log(top)
-            // debugger
-            // const slide = document.querySelector(".slide");
-            // slide.textContent = obj.description;
-        //   }
-        // })
-      }
-    }
-  })
+        let widthWeek = 7 * 24 * 60 * 60 * 1000;
+        let widthEvent = (el.finish - el.start) + (24 * 60 * 60 * 1000);
+        weeks[j].innerHTML += `<div class="slide" style="left: ${(el.start - item.dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${top}px;"></div>`;
+        // debugger
+    })
+  }
+    // });
+  });
+  // function pushEvent(mock, index, elem) {
+  //   if (mock[index].visible.length >= 3) {
+  //     return mock[index].hidden.push(Object.assign({}, elem));
+  //   } else {
+  //     return mock[index].visible.push(Object.assign({}, elem));
+  //   }
+  // }
+  // let top = 35;
+  // weeksTimeStamp.forEach((item) => {
+  //   // debugger
+  //   let widthWeek = 7 * 24 * 60 * 60 * 1000;
+  //   let widthEvent = (obj.finish - obj.start) + (24 * 60 * 60 * 1000);
+  //   const weeks = [...document.querySelectorAll(".week")];
+  //   for (let j = 0; j < totalWeeks; j++) {
+  //     if ((obj.start >= item[j].dayStartTS) && (obj.finish <= item[j].dayEndTS)) {
+  //       item[j].visible = visible;
+  //       let top = 35;
+  //       console.log(visible);
+  //       console.log(weeks);
+  //       // visible.forEach(function (it, k) {
+  //       //   if (visible[k - 1] && visible[k - 1].finish <= it.start) { 
+  //       //     top += 30;
+  //       //   }
+  //       //   console.log(top)
+  //       //   debugger
+  //       //   if (top <= 120) {
+  //           weeks[j].innerHTML += `<div class="slide" style="left: ${(obj.start - item[j].dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${top}px;"></div>`
+  //           console.log(top)
+  //           // debugger
+  //           // const slide = document.querySelector(".slide");
+  //           // slide.textContent = obj.description;
+  //       //   }
+  //       // })
+  //     }
+  //   }
+  // })
+
+
+  // weeksTimeStamp.forEach((item) => {
+  //   // debugger
+  //   let top = 35;
+  //   let widthWeek = 7 * 24 * 60 * 60 * 1000;
+  //   let widthEvent = (obj.finish - obj.start) + (24 * 60 * 60 * 1000);
+  //   const weeks = [...document.querySelectorAll(".week")];
+  //   for (let j = 0; j < totalWeeks; j++) {
+  //     if ((obj.start >= item[j].dayStartTS) && (obj.finish <= item[j].dayEndTS)) {
+  //       item[j].visible = visible;
+  //       console.log(visible);
+  //       console.log(weeks);
+
+  //       let lastEvent = visible.pop();
+  //       console.log(lastEvent);
+  //       if (visible.find((it) => it.finish >= lastEvent.start )) {
+  //         top += 45;
+  //         debugger
+  //         weeks[j].innerHTML += `<div class="slide" style="left: ${(obj.start - item[j].dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${top}px;"></div>`
+  //         // } else if (visible.find((it) => { it.finish >= lastEvent.start }) && (top === 35)) {
+  //         //   top += 30;
+  //         //  debugger
+  //         //   console.log(top);
+  //         //   weeks[j].innerHTML += `<div class="slide" style="left: ${(obj.start - item[j].dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${top}px;"></div>`
+  //       }else {
+  //         weeks[j].innerHTML += `<div class="slide" style="left: ${(obj.start - item[j].dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${35}px;"></div>`
+  //         const slide = document.querySelector(".slide");
+  //         slide.textContent = obj.description;
+  //       }
+  //       visible.push(lastEvent);
+  //       console.log(visible);
+  //       // visible.forEach(function (it, k) {
+  //       //   if (visible[k - 1] && visible[k - 1].finish <= it.start) { 
+  //       //     top += 30;
+  //       //   }
+  //       //   console.log(top)
+  //       //   debugger
+  //       //   if (top <= 120) {
+  //           // weeks[j].innerHTML += `<div class="slide" style="left: ${(obj.start - item[j].dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${top}px;"></div>`
+  //           // console.log(top)
+  //           // debugger
+  //           // const slide = document.querySelector(".slide");
+  //           // slide.textContent = obj.description;
+  //       //   }
+  //       // })
+  //     }
+  //   }
+  // })
 
   console.log("weeksTimeStamp", weeksTimeStamp);
 
