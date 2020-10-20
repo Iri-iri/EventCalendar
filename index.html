@@ -12,12 +12,12 @@
 
 <body>
   <div class="container">
-
+    <div><p class="title"><span class="green">Calendar</span> with your events for the <span class="green">current</span> month!</p></div>
     <form id="form">
-      <input id="description" type="text" placeholder="Description">
+      <input id="description" type="text" placeholder="Enter your event here...">
       <input id="start" type="date">
       <input id="finish" type="date">
-      <button id="btn">Btn</button>
+      <button id="btn">Add</button>
     </form>
 
     <div class="calendar">
@@ -41,6 +41,19 @@
   
         <div class="weekAll">
         </div>
+    </div>
+  </div>
+  <div class="modal-wrapper">
+    <div class="modal">
+      <table id="table">
+        <tr>
+          <th>Description</th>
+          <th>Start of your event <span id="upStart" class="green">&uarr;</span> <span id="downStart" class="green">&darr;</span></th>
+          <th>Finish of your event <span id="upFinish" class="green">&uarr;</span> <span id="downFinish" class="green">&darr;</span></th>
+          <tbody id="tbody"></tbody>
+        </tr>
+      </table>
+      <button id="closeBtn">&#10006;</button>
 
     </div>
   </div>

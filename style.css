@@ -14,15 +14,69 @@ body {
   height: 100vh;
 }
 
+.title {
+  width: 80%;
+  margin: 10px auto;
+  font-size: 1.5rem;
+  text-align: center;
+  color: #fff;
+  text-shadow: 2px 2px 3px black, 0 0 1rem rgba(112, 112, 112, 0.8);
+}
+
+.green {
+  color: #27ae60;
+  text-shadow: 1px 1px 2px black, 0 0 1rem rgba(112, 112, 112, 0.8);
+}
+
 #form {
   width: 80%;
   margin: 0 auto;
-  padding: 2rem 0;
+  padding: 0.5rem 0 2rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 form input {
-  height: 1.5rem;
+  margin-top: 10px;
   margin-right: 1.5rem;
+  padding-top: 10px;
+}
+
+#description {
+  padding: 5px 15px;
+  border: none;
+  outline: none;
+  border-radius: 16px 16px 16px 16px;
+  border-bottom: 3px solid #27ae60;
+  box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.5);
+  font-size: 1rem;
+  transition: 0.2s ease-out;
+}
+
+#start,
+#finish {
+  padding: 5px 15px;
+  border: none;
+  outline: none;
+  border-radius: 16px 16px 16px 16px;
+  border-bottom: 3px solid #27ae60;
+  box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.5);
+  font-size: 1rem;
+  color: #999;
+}
+
+#btn {
+  margin-top: 10px;
+  background-color: #27ae60;
+  padding: 5px 25px;
+  border: none;
+  outline: none;
+  border-radius: 16px 16px 16px 16px;
+  border-bottom: 3px solid #2ecc71;
+  box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.5);
+  font-size: 1rem;
+  color: #fff;
 }
 
 .calendar {
@@ -37,7 +91,7 @@ form input {
   justify-content: space-between;
   text-align: center;
   align-items: center;
-  padding: 40px 30px;
+  padding: 30px 30px;
   width: 100%;
   background-color: #2ecc71;
   color: #ffff;
@@ -60,8 +114,22 @@ form input {
 .week div.slide {
   border: 2px solid #2ecc71;
   background-color: rgba(0, 0, 0, 0.1);
-  height: 25px;
+
+  height: 20px;
   position: absolute;
+  padding: 0;
+  justify-content: flex-start;
+  font-size: 12px;
+}
+
+.week div.hidden {
+  background-color: rgba(0, 0, 0, 0.1);
+  height: 20px;
+  position: absolute;
+  padding: 0;
+  justify-content: center;
+  font-size: 12px;
+
 }
 
 
@@ -74,7 +142,9 @@ form input {
 }
 
 .week div {
-  height: 120px;
+
+  height: 130px;
+
   padding: 0.5rem;
   display: flex;
   justify-content: flex-end;
@@ -115,6 +185,61 @@ form input {
   cursor: pointer;
 }
 
-/* .wrapper {
-  position: relative;
-} */
+
+/*======================= modal-window ======================== */
+
+.modal-wrapper {
+  background-color: rgba(128, 128, 128, 0.5);
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.modal {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  border: 3px solid #2ecc71;
+  background-color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
+#closeBtn {
+  color: #aaaaaa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  width: 40px;
+  height: 40px;
+  font-weight: bold;
+}
+
+#closeBtn:hover,
+#closeBtn:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+table {
+  border-collapse: collapse;
+  width: 600px;
+  border: 1px solid black;
+  margin: 10px;
+  box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.5);
+}
+
+th,
+td {
+  border: 1px solid black;
+  padding: 10px;
+}
+

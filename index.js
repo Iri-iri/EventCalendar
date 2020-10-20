@@ -93,10 +93,8 @@ const data = (year, month) => {
   for (let i = 0; i < Math.ceil(dates.length / 7); i++) {
     weeks[i] = dates.slice(i * 7, i * 7 + 7);
   }
-  
-  // console.log(weeks)
-    return weeks;
-    
+
+    return weeks;    
   }
   
   const setWeeksGrid = (date) => {
@@ -115,10 +113,12 @@ const displayCalendar = (currentWeek) => {
   weekAll.innerHTML = "";
   
   currentWeek.forEach((item, index) => {
-  weekAll.innerHTML += `<div class="week"></div>`;
-  
-  const weeks = [...document.querySelectorAll(".week")];
-  weeks[index].innerHTML = "";
+
+    weekAll.innerHTML += `<div class="week"></div>`;
+    
+    const weeks = [...document.querySelectorAll(".week")];
+    weeks[index].innerHTML = "";
+
   
     item.forEach((it) => {
         if (it.today === "today") {
@@ -155,8 +155,25 @@ const nextTitleOfCalendar = (date, month) => {
 
 init();
 
-// let visible = [];
+
 let events = [];
+
+const timestampToDate = (ts) => {
+  const d = new Date();
+  d.setTime(ts);
+  return ('0' + d.getDate()).slice(-2) + '.' + ('0' + (d.getMonth() + 1)).slice(-2) + '.' + d.getFullYear();
+}
+
+const displayTable = (element) => {
+  tbody.innerHTML += `
+          <tr><td class = "description">${element.description}</td>
+          <td class = "start">${timestampToDate(element.start)}</td>
+          <td class = "finish">${timestampToDate(element.finish)}</td></tr>
+          `
+}
+
+const btn = document.querySelector("#btn");
+
 
 const dataTimeStamp = () => {
   const nowMonth = new Date().getMonth();
@@ -183,7 +200,6 @@ const dataTimeStamp = () => {
     finish: Date.parse(finish.value) - (3 * 60 * 60 * 1000),
   }
     events.push(obj);
-    console.log("events", events);
 
 
   for (let i = 0; i < totalWeeks * 7; i += 7) {
@@ -207,10 +223,13 @@ const dataTimeStamp = () => {
       dayStartTS: date.getTime(),
       dateEnd: dateEnd.getDate(),
       dayEndTS: dateEnd.getTime(),
-      a: "100",
-      b: "100",
-      c: "100",
+
+      a: 100,
+      b: 100,
+      c: 100,
       visible: [],
+      hidden: [],
+
     });
 
   }
@@ -220,125 +239,161 @@ const dataTimeStamp = () => {
   weeksTimeStamp.forEach((item, j) => {
 
     const weeks = [...document.querySelectorAll(".week")];
-    debugger
     events.forEach((elem) => {
-      // weeks.innerHTML = "";
-      if ((elem.start >= item.dayStartTS) && (elem.finish <= item.dayEndTS)) {
-        item.visible.push(elem);
-      } else if ((elem.start >= item.dayStartTS) && (elem.start <= item.dayEndTS)) {
-        item.visible.push(elem);
-      } else if ((elem.finish >= item.dayStartTS) && (elem.finish <= item.dayEndTS)) {
-        item.visible.push(elem);
-      } else if ((elem.start < item.dayStartTS) && (elem.start > item.dayEndTS)) {
-        item.visible.push(elem);
-      } else if ((elem.start <= item.dayStartTS) && (elem.finish >= item.dayEndTS)) {
-        item.visible.push(elem);
-      };
+        if ((elem.start >= item.dayStartTS) && (elem.finish <= item.dayEndTS)) {
+          item.visible.push(elem);
+        } else if ((elem.start >= item.dayStartTS) && (elem.start <= item.dayEndTS)) {
+          item.visible.push(elem);
+        } else if ((elem.finish >= item.dayStartTS) && (elem.finish <= item.dayEndTS)) {
+          item.visible.push(elem);
+        } else if ((elem.start < item.dayStartTS) && (elem.start > item.dayEndTS)) {
+          item.visible.push(elem);
+        } else if ((elem.start <= item.dayStartTS) && (elem.finish >= item.dayEndTS)) {
+          item.visible.push(elem);
+        };
+      if (item.visible.length > 3) {
+        item.hidden = item.visible.slice(3);
+      } 
     });
 
     if (item.visible.length > 0) {
-      item.visible.forEach((el)=>{
-        // debugger
+      item.visible.slice(0, 3).forEach((el, index) => {
+        let widthEventFree;
+        let widthEv;
         let top = 35;
         let widthWeek = 7 * 24 * 60 * 60 * 1000;
         let widthEvent = (el.finish - el.start) + (24 * 60 * 60 * 1000);
-        weeks[j].innerHTML += `<div class="slide" style="left: ${(el.start - item.dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${top}px;"></div>`;
-        // debugger
-    })
-  }
-    // });
+        let eventLeft = (el.start - item.dayStartTS) / widthWeek * 100;
+        let eventRight = (item.dayEndTS - el.finish) / widthWeek * 100;
+        
+        if (el.finish < item.dayEndTS) {
+          widthEventFree = ((el.finish + 24 * 60 * 60 * 1000) - item.dayStartTS) / widthWeek * 100;
+          widthEv = ((el.finish - item.dayStartTS) + (24 * 60 * 60 * 1000)) / widthWeek * 100;
+        } else {
+          widthEventFree = 100;
+          widthEv = 100;
+        }
+        if (item.a >= widthEv) {
+          top = 35;
+          item.a = item.a - widthEventFree;
+        } else if (item.b >= widthEv) {
+          top = 60;
+          item.b = item.b - widthEventFree;
+        } else if (item.c >= widthEv) {
+          top = 85;
+          item.c = item.c - widthEventFree;
+        }
+        
+        if (eventRight < 0 && eventLeft < 0) {
+          widthEvent = widthWeek;
+          eventLeft = 0;
+        } else if (eventRight < 0) {
+          widthEvent = (item.dayEndTS - el.start) + (24 * 60 * 60 * 1000)
+        } else if (eventLeft < 0) {
+          eventLeft = 0;
+          widthEvent = widthWeek - (item.dayEndTS - el.finish);
+        }
+        
+        weeks[j].innerHTML += `<div class="slide" style="left: ${eventLeft}%; width:${(widthEvent * 100) / widthWeek}%; top:${top}px;"></div>`;
+
+        const slidesForCurrentWeek = [...weeks[j].querySelectorAll(".slide")];
+        slidesForCurrentWeek[index].textContent = el.description;
+
+
+      })
+      
+        if (item.hidden.length > 0) {
+          weeks[j].innerHTML += `<div class="hidden" data-index="${j}" style="left: ${0}%; width:${100}%; top:${110}px;"> ${item.hidden.length} more...</div>`;
+        }
+
+      const hiddenSlide = [...document.querySelectorAll(".hidden")];
+      const modalWrapper = document.querySelector(".modal-wrapper");
+      const closeBtn = document.querySelector("#closeBtn");
+      const tbody = document.querySelector("#tbody");
+      const upStart = document.querySelector("#upStart");
+      const downStart = document.querySelector("#downStart");
+      const upFinish = document.querySelector("#upFinish");
+      const downFinish = document.querySelector("#downFinish");
+
+        hiddenSlide.forEach((el) => {
+        el.addEventListener("click", (event) => {
+          event.preventDefault();
+          let indexOfHiddenSlide = el.dataset.index;
+          modalWrapper.style.display = "block";
+          tbody.innerHTML = "";
+          weeksTimeStamp[indexOfHiddenSlide].hidden.forEach((elem) => {
+            displayTable(elem);
+          })
+
+        })
+        closeBtn.addEventListener("click", () => {
+          modalWrapper.style.display = "none";
+        });
+          
+        upStart.addEventListener("click", (event) => {
+          event.preventDefault();
+          item.hidden.sort(function (a, b) {
+            return a.start - b.start;
+          });
+
+          tbody.innerHTML = "";
+          item.hidden.forEach((elem) => {
+            displayTable(elem);
+          })
+        }); 
+          
+        downStart.addEventListener("click", (event) => {
+          event.preventDefault();
+          item.hidden.sort(function (a, b) {
+            return b.start - a.start;
+          });
+
+          tbody.innerHTML = "";
+          item.hidden.forEach((elem) => {
+            displayTable(elem);
+          })
+        });
+        
+        upFinish.addEventListener("click", (event) => {
+          event.preventDefault();
+          item.hidden.sort(function (a, b) {
+            return a.finish - b.finish;
+          });
+
+          tbody.innerHTML = "";
+          item.hidden.forEach((elem) => {
+            displayTable(elem);
+          })
+        });  
+          
+        downFinish.addEventListener("click", (event) => {
+          event.preventDefault();
+          item.hidden.sort(function (a, b) {
+            return b.finish - a.finish;
+          });
+
+          tbody.innerHTML = "";
+          item.hidden.forEach((elem) => {
+            displayTable(elem);
+          })
+        });  
+          
+      })
+      }
   });
-  // function pushEvent(mock, index, elem) {
-  //   if (mock[index].visible.length >= 3) {
-  //     return mock[index].hidden.push(Object.assign({}, elem));
-  //   } else {
-  //     return mock[index].visible.push(Object.assign({}, elem));
-  //   }
-  // }
-  // let top = 35;
-  // weeksTimeStamp.forEach((item) => {
-  //   // debugger
-  //   let widthWeek = 7 * 24 * 60 * 60 * 1000;
-  //   let widthEvent = (obj.finish - obj.start) + (24 * 60 * 60 * 1000);
-  //   const weeks = [...document.querySelectorAll(".week")];
-  //   for (let j = 0; j < totalWeeks; j++) {
-  //     if ((obj.start >= item[j].dayStartTS) && (obj.finish <= item[j].dayEndTS)) {
-  //       item[j].visible = visible;
-  //       let top = 35;
-  //       console.log(visible);
-  //       console.log(weeks);
-  //       // visible.forEach(function (it, k) {
-  //       //   if (visible[k - 1] && visible[k - 1].finish <= it.start) { 
-  //       //     top += 30;
-  //       //   }
-  //       //   console.log(top)
-  //       //   debugger
-  //       //   if (top <= 120) {
-  //           weeks[j].innerHTML += `<div class="slide" style="left: ${(obj.start - item[j].dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${top}px;"></div>`
-  //           console.log(top)
-  //           // debugger
-  //           // const slide = document.querySelector(".slide");
-  //           // slide.textContent = obj.description;
-  //       //   }
-  //       // })
-  //     }
-  //   }
-  // })
-
-
-  // weeksTimeStamp.forEach((item) => {
-  //   // debugger
-  //   let top = 35;
-  //   let widthWeek = 7 * 24 * 60 * 60 * 1000;
-  //   let widthEvent = (obj.finish - obj.start) + (24 * 60 * 60 * 1000);
-  //   const weeks = [...document.querySelectorAll(".week")];
-  //   for (let j = 0; j < totalWeeks; j++) {
-  //     if ((obj.start >= item[j].dayStartTS) && (obj.finish <= item[j].dayEndTS)) {
-  //       item[j].visible = visible;
-  //       console.log(visible);
-  //       console.log(weeks);
-
-  //       let lastEvent = visible.pop();
-  //       console.log(lastEvent);
-  //       if (visible.find((it) => it.finish >= lastEvent.start )) {
-  //         top += 45;
-  //         debugger
-  //         weeks[j].innerHTML += `<div class="slide" style="left: ${(obj.start - item[j].dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${top}px;"></div>`
-  //         // } else if (visible.find((it) => { it.finish >= lastEvent.start }) && (top === 35)) {
-  //         //   top += 30;
-  //         //  debugger
-  //         //   console.log(top);
-  //         //   weeks[j].innerHTML += `<div class="slide" style="left: ${(obj.start - item[j].dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${top}px;"></div>`
-  //       }else {
-  //         weeks[j].innerHTML += `<div class="slide" style="left: ${(obj.start - item[j].dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${35}px;"></div>`
-  //         const slide = document.querySelector(".slide");
-  //         slide.textContent = obj.description;
-  //       }
-  //       visible.push(lastEvent);
-  //       console.log(visible);
-  //       // visible.forEach(function (it, k) {
-  //       //   if (visible[k - 1] && visible[k - 1].finish <= it.start) { 
-  //       //     top += 30;
-  //       //   }
-  //       //   console.log(top)
-  //       //   debugger
-  //       //   if (top <= 120) {
-  //           // weeks[j].innerHTML += `<div class="slide" style="left: ${(obj.start - item[j].dayStartTS) / widthWeek * 100}%; width:${(widthEvent * 100) / widthWeek}%; top:${top}px;"></div>`
-  //           // console.log(top)
-  //           // debugger
-  //           // const slide = document.querySelector(".slide");
-  //           // slide.textContent = obj.description;
-  //       //   }
-  //       // })
-  //     }
-  //   }
-  // })
-
-  console.log("weeksTimeStamp", weeksTimeStamp);
-
+  
 }
 
-btn.addEventListener("click", function (event) {
+
+btn.addEventListener("click", (event) => {
+
   event.preventDefault();
+  
+  const slides = [...document.querySelectorAll(".slide")];
+  slides.forEach(event => event.remove());
+  const hiddenSlide = [...document.querySelectorAll(".hidden")];
+  hiddenSlide.forEach(event => event.remove());
+
   dataTimeStamp();
 })
+
