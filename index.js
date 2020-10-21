@@ -119,7 +119,7 @@ const displayCalendar = (currentWeek) => {
   
     item.forEach((it) => {
         if (it.today === "today") {
-          weeks[index].innerHTML += `<div style ="color: #fff; background-color: #27ae60">${it.day}</div>`;
+          weeks[index].innerHTML += `<div style ="border: 3px solid #27ae60">${it.day}</div>`;
         } else if (it.month === "current") {
           weeks[index].innerHTML += `<div>${it.day}</div>`;
         } else {
@@ -292,11 +292,13 @@ const dataTimeStamp = () => {
         slidesForCurrentWeek[index].textContent = el.description;
 
       })
+
+      const table = document.querySelector("#table");
       
         if (item.hidden.length > 0) {
           weeks[j].innerHTML += `<div class="hidden" data-index="${j}" style="left: ${0}%; width:${100}%; top:${110}px;"> ${item.hidden.length} more...</div>`;
         }
-
+      
       const hiddenSlide = [...document.querySelectorAll(".hidden")];
       const modalWrapper = document.querySelector(".modal-wrapper");
       const closeBtn = document.querySelector("#closeBtn");
@@ -305,11 +307,13 @@ const dataTimeStamp = () => {
       const downStart = document.querySelector("#downStart");
       const upFinish = document.querySelector("#upFinish");
       const downFinish = document.querySelector("#downFinish");
+      // let indexOfTable = table.dataset.number;
 
         hiddenSlide.forEach((el) => {
         el.addEventListener("click", (event) => {
           event.preventDefault();
           let indexOfHiddenSlide = el.dataset.index;
+          table.dataset.number = el.dataset.index;
           modalWrapper.style.display = "block";
           tbody.innerHTML = "";
           weeksTimeStamp[indexOfHiddenSlide].hidden.forEach((elem) => {
@@ -323,48 +327,52 @@ const dataTimeStamp = () => {
           
         upStart.addEventListener("click", (event) => {
           event.preventDefault();
-          item.hidden.sort(function (a, b) {
+          let indexOfTable = table.dataset.number;
+          weeksTimeStamp[indexOfTable].hidden.sort(function (a, b) {
             return a.start - b.start;
           });
 
           tbody.innerHTML = "";
-          item.hidden.forEach((elem) => {
+          weeksTimeStamp[indexOfTable].hidden.forEach((elem) => {
             displayTable(elem);
           })
         }); 
           
         downStart.addEventListener("click", (event) => {
           event.preventDefault();
-          item.hidden.sort(function (a, b) {
+          let indexOfTable = table.dataset.number;
+          weeksTimeStamp[indexOfTable].hidden.sort(function (a, b) {
             return b.start - a.start;
           });
 
           tbody.innerHTML = "";
-          item.hidden.forEach((elem) => {
+          weeksTimeStamp[indexOfTable].hidden.forEach((elem) => {
             displayTable(elem);
           })
         });
         
         upFinish.addEventListener("click", (event) => {
           event.preventDefault();
-          item.hidden.sort(function (a, b) {
+          let indexOfTable = table.dataset.number;
+          weeksTimeStamp[indexOfTable].hidden.sort(function (a, b) {
             return a.finish - b.finish;
           });
 
           tbody.innerHTML = "";
-          item.hidden.forEach((elem) => {
+          weeksTimeStamp[indexOfTable].hidden.forEach((elem) => {
             displayTable(elem);
           })
         });  
           
         downFinish.addEventListener("click", (event) => {
           event.preventDefault();
-          item.hidden.sort(function (a, b) {
+          let indexOfTable = table.dataset.number;
+          weeksTimeStamp[indexOfTable].hidden.sort(function (a, b) {
             return b.finish - a.finish;
           });
 
           tbody.innerHTML = "";
-          item.hidden.forEach((elem) => {
+          weeksTimeStamp[indexOfTable].hidden.forEach((elem) => {
             displayTable(elem);
           })
         });  
@@ -384,5 +392,6 @@ btn.addEventListener("click", (event) => {
   hiddenSlide.forEach(event => event.remove());
 
   dataTimeStamp();
+  document.querySelector("#description").value = "";
 })
 
