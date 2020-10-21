@@ -93,6 +93,7 @@ const data = (year, month) => {
   for (let i = 0; i < Math.ceil(dates.length / 7); i++) {
     weeks[i] = dates.slice(i * 7, i * 7 + 7);
   }
+
     return weeks;    
   }
   
@@ -112,10 +113,12 @@ const displayCalendar = (currentWeek) => {
   weekAll.innerHTML = "";
   
   currentWeek.forEach((item, index) => {
+
     weekAll.innerHTML += `<div class="week"></div>`;
     
     const weeks = [...document.querySelectorAll(".week")];
     weeks[index].innerHTML = "";
+
   
     item.forEach((it) => {
         if (it.today === "today") {
@@ -152,6 +155,7 @@ const nextTitleOfCalendar = (date, month) => {
 
 init();
 
+
 let events = [];
 
 const timestampToDate = (ts) => {
@@ -169,6 +173,7 @@ const displayTable = (element) => {
 }
 
 const btn = document.querySelector("#btn");
+
 
 const dataTimeStamp = () => {
   const nowMonth = new Date().getMonth();
@@ -194,8 +199,8 @@ const dataTimeStamp = () => {
     start: Date.parse(start.value) - (3 * 60 * 60 * 1000),
     finish: Date.parse(finish.value) - (3 * 60 * 60 * 1000),
   }
-
     events.push(obj);
+
 
   for (let i = 0; i < totalWeeks * 7; i += 7) {
 
@@ -218,11 +223,13 @@ const dataTimeStamp = () => {
       dayStartTS: date.getTime(),
       dateEnd: dateEnd.getDate(),
       dayEndTS: dateEnd.getTime(),
+
       a: 100,
       b: 100,
       c: 100,
       visible: [],
       hidden: [],
+
     });
 
   }
@@ -230,6 +237,7 @@ const dataTimeStamp = () => {
   weeksTimeStamp = dates;
   
   weeksTimeStamp.forEach((item, j) => {
+
     const weeks = [...document.querySelectorAll(".week")];
     events.forEach((elem) => {
         if ((elem.start >= item.dayStartTS) && (elem.finish <= item.dayEndTS)) {
@@ -290,6 +298,7 @@ const dataTimeStamp = () => {
 
         const slidesForCurrentWeek = [...weeks[j].querySelectorAll(".slide")];
         slidesForCurrentWeek[index].textContent = el.description;
+
 
       })
 
@@ -383,7 +392,9 @@ const dataTimeStamp = () => {
   
 }
 
+
 btn.addEventListener("click", (event) => {
+
   event.preventDefault();
   
   const slides = [...document.querySelectorAll(".slide")];
